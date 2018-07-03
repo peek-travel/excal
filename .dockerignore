@@ -1,0 +1,9 @@
+*
+!lib
+!src
+!test
+!.formatter.exs
+!coveralls.json
+!Makefile
+!mix.exs
+!mix.lock
