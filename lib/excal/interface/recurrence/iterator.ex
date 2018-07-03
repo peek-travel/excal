@@ -1,4 +1,6 @@
 defmodule Excal.Interface.Recurrence.Iterator do
+  @moduledoc false
+
   @on_load :load_nifs
 
   def load_nifs, do: :erlang.load_nif('./priv/recurrence/iterator', 0)

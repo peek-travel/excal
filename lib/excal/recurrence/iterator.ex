@@ -1,4 +1,8 @@
 defmodule Excal.Recurrence.Iterator do
+  @moduledoc """
+  Elixir wrapper around an icalendar recurrence iterator.
+  """
+
   alias Excal.Interface.Recurrence.Iterator, as: Interface
 
   @enforce_keys [:iterator, :type, :rrule, :dtstart]

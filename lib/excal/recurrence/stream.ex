@@ -1,4 +1,8 @@
 defmodule Excal.Recurrence.Stream do
+  @moduledoc """
+  Generates Elixir streams from icalendar rrules.
+  """
+
   alias Excal.Recurrence.Iterator
 
   def new(rrule, dtstart, opts \\ []) do
