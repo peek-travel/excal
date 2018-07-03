@@ -1,0 +1,15 @@
+sudo: required
+
+services:
+  - docker
+
+install:
+  - docker build -f test/docker/Dockerfile -t excal:test .
+
+script:
+  - docker run --rm excal:test mix format --check-formatted
+  - docker run --rm excal:test mix credo
+  - docker run --rm -v $PWD/cover:/opt/app/cover excal:test mix coveralls.json
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

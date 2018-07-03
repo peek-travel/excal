@@ -10,14 +10,20 @@ RUN mkdir /opt/src && \
   git clone https://github.com/libical/libical.git && \
   mkdir libical/build && \
   cd libical/build && \
-  cmake -DWITH_CXX_BINDINGS=false -DICAL_BUILD_DOCS=false -DICAL_GLIB=false -DCMAKE_INSTALL_LIBDIR=lib .. && \
+  cmake -DWITH_CXX_BINDINGS=false \
+  -DICAL_BUILD_DOCS=false \
+  -DICAL_GLIB=false \
+  -DCMAKE_RELEASE_TYPE=Release \
+  -DCMAKE_INSTALL_LIBDIR=lib \
+  -DSHARED_ONLY=true \
+  .. && \
   make && \
   make install
 
 COPY . /opt/app/
 
-ENV MIX_ENV prod
+ENV MIX_ENV test
 
-RUN mix do deps.get, deps.compile, compile
+RUN mix do deps.get, deps.compile, compile --warnings-as-errors
 
 CMD ["mix", "test"]
