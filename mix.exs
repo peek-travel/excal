@@ -15,6 +15,8 @@ defmodule Excal.MixProject do
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
+      description: description(),
+      package: package(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [coveralls: :test]
@@ -24,6 +26,22 @@ defmodule Excal.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp description do
+    """
+    NIF bindings to libical providing icalendar rrule expansion.
+    """
+  end
+
+  defp package do
+    [
+      maintainers: ["Chris Dosé <chris.dose@gmail.com>"],
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => "https://github.com/peek-travel/excal"
+      }
     ]
   end
 
