@@ -1,4 +1,4 @@
-FROM bitwalker/alpine-elixir:1.6.6
+FROM bitwalker/alpine-elixir:1.7.1
 
 # install builds dependencies for libical
 RUN apk --no-cache --update upgrade && \
