@@ -48,7 +48,7 @@ defmodule Excal.MixProject do
   defp deps do
     [
       {:benchee, "~> 0.13", only: :dev, runtime: false},
-      {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.9", only: :test, runtime: false},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]
