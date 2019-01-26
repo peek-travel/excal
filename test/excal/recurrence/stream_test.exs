@@ -37,9 +37,9 @@ defmodule Excal.Recurrence.StreamTest do
   describe "Taking occurrences from the stream" do
     setup [:stream]
 
-    @tag rrule: "FREQ=DAILY;COUNT=3"
+    @tag rrule: "FREQ=DAILY"
     @tag dtstart: ~D[2018-09-09]
-    test "returns date occurrences", %{stream: stream} do
+    test "returns date occurrences if dtstart is given as a Date", %{stream: stream} do
       times = Enum.take(stream, 3)
 
       assert times == [
@@ -51,7 +51,7 @@ defmodule Excal.Recurrence.StreamTest do
 
     @tag rrule: "FREQ=DAILY"
     @tag dtstart: ~N[2018-09-09 12:30:00]
-    test "returns datetime occurrences", %{stream: stream} do
+    test "returns datetime occurrences if dtstart is given as a NaiveDateTime", %{stream: stream} do
       times = Enum.take(stream, 3)
 
       assert times == [

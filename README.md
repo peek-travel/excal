@@ -7,8 +7,7 @@ This library is a **WIP**!
 
 ## Requirements
 
-Excal requires that libical be present on your system, and that it's the very latest version. This effectively means that
-you need to build it from source. I'll include instructions on how to accomplish this soon.
+Excal requires that libical be present on your system, and that it's at least version 3.0.0.
 
 ## Installation
 

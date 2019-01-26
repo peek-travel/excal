@@ -4,6 +4,11 @@ defmodule Excal.Benchmarks do
     Enum.take(stream, 1000)
   end
 
+  def test_daily_date_with_end do
+    {:ok, stream} = Excal.Recurrence.Stream.new("FREQ=DAILY", ~D[2018-09-09], until: ~D[2030-09-09])
+    Enum.take(stream, 1000)
+  end
+
   def test_daily_datetime do
     {:ok, stream} = Excal.Recurrence.Stream.new("FREQ=DAILY", ~N[2018-09-09 12:30:00])
     Enum.take(stream, 1000)
@@ -30,6 +35,7 @@ alias Excal.Benchmarks
 Benchee.run(
   %{
     "test_daily_date" => fn -> Benchmarks.test_daily_date() end,
+    "test_daily_date_with_end" => fn -> Benchmarks.test_daily_date_with_end() end,
     "test_daily_datetime" => fn -> Benchmarks.test_daily_datetime() end,
     "test_weekly_date" => fn -> Benchmarks.test_weekly_date() end,
     "test_weekly_datetime" => fn -> Benchmarks.test_weekly_datetime() end
