@@ -25,11 +25,11 @@ defmodule Excal.Recurrence.Stream do
     end
   end
 
-  defp process_options(iterator, [{:until, time} | rest]) do
-    with {:ok, iterator} <- Iterator.set_end(iterator, time) do
-      process_options(iterator, rest)
-    end
-  end
+  # defp process_options(iterator, [{:until, time} | rest]) do
+  #   with {:ok, iterator} <- Iterator.set_end(iterator, time) do
+  #     process_options(iterator, rest)
+  #   end
+  # end
 
   defp make_stream(rrule, dtstart, opts) do
     Elixir.Stream.resource(

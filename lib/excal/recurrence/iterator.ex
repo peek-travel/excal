@@ -24,14 +24,14 @@ defmodule Excal.Recurrence.Iterator do
 
   def set_start(_, _), do: {:error, :datetime_type_mismatch}
 
-  def set_end(%__MODULE__{iterator: iterator_ref, type: type} = iterator, %type{} = date_or_datetime) do
-    with {:ok, _, time_string} <- to_ical_time_string(date_or_datetime),
-         :ok <- Interface.set_end(iterator_ref, time_string) do
-      {:ok, iterator}
-    end
-  end
+  # def set_end(%__MODULE__{iterator: iterator_ref, type: type} = iterator, %type{} = date_or_datetime) do
+  #   with {:ok, _, time_string} <- to_ical_time_string(date_or_datetime),
+  #        :ok <- Interface.set_end(iterator_ref, time_string) do
+  #     {:ok, iterator}
+  #   end
+  # end
 
-  def set_end(_, _), do: {:error, :datetime_type_mismatch}
+  # def set_end(_, _), do: {:error, :datetime_type_mismatch}
 
   def next(%__MODULE__{iterator: iterator_ref, type: type} = iterator) do
     occurrence = Interface.next(iterator_ref)

@@ -34,17 +34,17 @@ defmodule Excal.Recurrence.IteratorTest do
     end
   end
 
-  describe "Iterator.set_end/2" do
-    setup [:iterator]
+  # describe "Iterator.set_end/2" do
+  #   setup [:iterator]
 
-    test "returns :ok if the end time is valid", %{iterator: iterator} do
-      assert {:ok, %Iterator{}} = Iterator.set_end(iterator, ~D[2019-09-09])
-    end
+  #   test "returns :ok if the end time is valid", %{iterator: iterator} do
+  #     assert {:ok, %Iterator{}} = Iterator.set_end(iterator, ~D[2019-09-09])
+  #   end
 
-    test "returns an error when the end type doesn't match the iterator's dtstart type", %{iterator: iterator} do
-      assert {:error, :datetime_type_mismatch} = Iterator.set_end(iterator, ~N[2018-09-09 12:30:00])
-    end
-  end
+  #   test "returns an error when the end type doesn't match the iterator's dtstart type", %{iterator: iterator} do
+  #     assert {:error, :datetime_type_mismatch} = Iterator.set_end(iterator, ~N[2018-09-09 12:30:00])
+  #   end
+  # end
 
   describe "Iterator.next/1" do
     setup [:iterator]
@@ -70,12 +70,12 @@ defmodule Excal.Recurrence.IteratorTest do
       assert {~D[2019-09-09], %Iterator{}} = Iterator.next(iterator)
     end
 
-    @tag end: ~D[2018-09-11]
-    test "respects the given end time", %{iterator: iterator} do
-      assert {~D[2018-09-09], %Iterator{} = iterator} = Iterator.next(iterator)
-      assert {~D[2018-09-10], %Iterator{} = iterator} = Iterator.next(iterator)
-      assert {nil, %Iterator{}} = Iterator.next(iterator)
-    end
+    # @tag end: ~D[2018-09-11]
+    # test "respects the given end time", %{iterator: iterator} do
+    #   assert {~D[2018-09-09], %Iterator{} = iterator} = Iterator.next(iterator)
+    #   assert {~D[2018-09-10], %Iterator{} = iterator} = Iterator.next(iterator)
+    #   assert {nil, %Iterator{}} = Iterator.next(iterator)
+    # end
   end
 
   defp iterator(context) do
@@ -84,7 +84,7 @@ defmodule Excal.Recurrence.IteratorTest do
 
     {:ok, iterator} = Iterator.new(rrule, dtstart)
     iterator = add_start(Map.get(context, :start), iterator)
-    iterator = add_end(Map.get(context, :end), iterator)
+    # iterator = add_end(Map.get(context, :end), iterator)
 
     [iterator: iterator]
   end
@@ -96,10 +96,10 @@ defmodule Excal.Recurrence.IteratorTest do
     iterator
   end
 
-  defp add_end(nil, iterator), do: iterator
+  # defp add_end(nil, iterator), do: iterator
 
-  defp add_end(end_time, iterator) do
-    {:ok, iterator} = Iterator.set_end(iterator, end_time)
-    iterator
-  end
+  # defp add_end(end_time, iterator) do
+  #   {:ok, iterator} = Iterator.set_end(iterator, end_time)
+  #   iterator
+  # end
 end
