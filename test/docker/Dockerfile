@@ -1,5 +1,8 @@
 FROM bitwalker/alpine-elixir:1.8.0
 
+ENV REFRESHED_AT 2019-01-26
+ENV LIBICAL_VERSION v3.0.4
+
 # install builds dependencies for libical
 RUN apk --no-cache --update upgrade && \
   apk --no-cache add make cmake icu-dev perl gcc g++ musl-dev libc-dev
@@ -7,7 +10,7 @@ RUN apk --no-cache --update upgrade && \
 # fetch and install libical from source/master
 RUN mkdir /opt/src && \
   cd /opt/src && \
-  git clone https://github.com/libical/libical.git && \
+  git clone --branch $LIBICAL_VERSION https://github.com/libical/libical.git && \
   mkdir libical/build && \
   cd libical/build && \
   cmake -DWITH_CXX_BINDINGS=false \
