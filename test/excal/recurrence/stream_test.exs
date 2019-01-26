@@ -28,10 +28,10 @@ defmodule Excal.Recurrence.StreamTest do
       assert is_function(stream)
     end
 
-    # test "accepts an option for end time" do
-    #   assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~D[2018-09-09], until: ~D[2019-09-09])
-    #   assert is_function(stream)
-    # end
+    test "accepts an option for end time" do
+      assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~D[2018-09-09], until: ~D[2019-09-09])
+      assert is_function(stream)
+    end
   end
 
   describe "Taking occurrences from the stream" do
@@ -86,18 +86,18 @@ defmodule Excal.Recurrence.StreamTest do
              ]
     end
 
-    # @tag rrule: "FREQ=WEEKLY"
-    # @tag dtstart: ~D[2018-09-09]
-    # @tag until: ~D[2018-09-24]
-    # test "respects the configured end time", %{stream: stream} do
-    #   times = Enum.to_list(stream)
+    @tag rrule: "FREQ=WEEKLY"
+    @tag dtstart: ~D[2018-09-09]
+    @tag until: ~D[2018-09-24]
+    test "respects the configured end time", %{stream: stream} do
+      times = Enum.to_list(stream)
 
-    #   assert times == [
-    #            ~D[2018-09-09],
-    #            ~D[2018-09-16],
-    #            ~D[2018-09-23]
-    #          ]
-    # end
+      assert times == [
+               ~D[2018-09-09],
+               ~D[2018-09-16],
+               ~D[2018-09-23]
+             ]
+    end
   end
 
   defp stream(context) do

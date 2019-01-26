@@ -6,7 +6,7 @@ defmodule Excal.Recurrence.Iterator do
   alias Excal.Interface.Recurrence.Iterator, as: Interface
 
   @enforce_keys [:iterator, :type, :rrule, :dtstart]
-  defstruct iterator: nil, type: nil, rrule: nil, dtstart: nil
+  defstruct iterator: nil, type: nil, rrule: nil, dtstart: nil, from: nil, until: nil, finished: false
 
   def new(rrule, date_or_datetime) do
     with {:ok, type, dtstart} <- to_ical_time_string(date_or_datetime),
@@ -18,24 +18,36 @@ defmodule Excal.Recurrence.Iterator do
   def set_start(%__MODULE__{iterator: iterator_ref, type: type} = iterator, %type{} = date_or_datetime) do
     with {:ok, _, time_string} <- to_ical_time_string(date_or_datetime),
          :ok <- Interface.set_start(iterator_ref, time_string) do
-      {:ok, iterator}
+      {:ok, %{iterator | from: date_or_datetime}}
     end
   end
 
   def set_start(_, _), do: {:error, :datetime_type_mismatch}
 
-  # def set_end(%__MODULE__{iterator: iterator_ref, type: type} = iterator, %type{} = date_or_datetime) do
-  #   with {:ok, _, time_string} <- to_ical_time_string(date_or_datetime),
-  #        :ok <- Interface.set_end(iterator_ref, time_string) do
-  #     {:ok, iterator}
-  #   end
-  # end
+  def set_end(%__MODULE__{type: type} = iterator, %type{} = date_or_datetime) do
+    {:ok, %{iterator | until: date_or_datetime}}
+  end
 
-  # def set_end(_, _), do: {:error, :datetime_type_mismatch}
+  def set_end(_, _), do: {:error, :datetime_type_mismatch}
 
-  def next(%__MODULE__{iterator: iterator_ref, type: type} = iterator) do
-    occurrence = Interface.next(iterator_ref)
-    {from_tuple(occurrence, type), iterator}
+  def next(%__MODULE__{finished: true} = iterator), do: {nil, iterator}
+
+  def next(%__MODULE__{iterator: iterator_ref, type: type, until: until} = iterator) do
+    occurrence = iterator_ref |> Interface.next() |> from_tuple(type)
+
+    cond do
+      is_nil(occurrence) ->
+        {nil, %{iterator | finished: true}}
+
+      is_nil(until) ->
+        {occurrence, iterator}
+
+      type.compare(occurrence, until) == :lt ->
+        {occurrence, iterator}
+
+      true ->
+        {nil, %{iterator | finished: true}}
+    end
   end
 
   defp to_ical_time_string(%Date{} = date), do: {:ok, Date, Date.to_iso8601(date, :basic)}

@@ -195,38 +195,6 @@ recurrence_iterator_set_start(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
   }
 }
 
-// static ERL_NIF_TERM
-// recurrence_iterator_set_end(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
-// {
-//   // get iterator arg
-//   icalrecur_iterator *iterator;
-//   if (argc < 1 || !get_iterator(env, argv[0], &iterator))
-//   {
-//     return enif_make_badarg(env);
-//   }
-
-//   // get end string arg
-//   char *end_string;
-//   if (argc < 2 || !get_string_from_binary(env, argv[1], &end_string))
-//   {
-//     return enif_make_badarg(env);
-//   }
-
-//   // build end from end_string
-//   // TODO: timezones?
-//   struct icaltimetype end = icaltime_from_string(end_string);
-//   if (icaltime_is_null_time(end))
-//   {
-//     return make_error_tuple(env, "invalid_end");
-//   }
-
-//   // set iterator end
-//   icalrecur_iterator_set_end(iterator, end);
-
-//   // return :ok
-//   return enif_make_atom(env, "ok");
-// }
-
 static ERL_NIF_TERM
 recurrence_iterator_next(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
@@ -262,7 +230,6 @@ recurrence_iterator_next(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] = {
     {"new", 2, recurrence_iterator_new},
     {"set_start", 2, recurrence_iterator_set_start},
-    // {"set_end", 2, recurrence_iterator_set_end},
     {"next", 1, recurrence_iterator_next}};
 
 ERL_NIF_INIT(Elixir.Excal.Interface.Recurrence.Iterator, nif_funcs, &load, NULL, &upgrade, NULL)

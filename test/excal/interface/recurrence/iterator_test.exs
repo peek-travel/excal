@@ -49,22 +49,6 @@ defmodule Excal.Interface.Recurrence.IteratorTest do
     end
   end
 
-  # describe "Iterator.set_end/2" do
-  #   setup [:iterator]
-
-  #   test "returns :ok if the end time is valid", %{iterator: iterator} do
-  #     assert :ok = Iterator.set_end(iterator, "20190909")
-  #   end
-
-  #   test "raises ArgumentError when not given a string for end", %{iterator: iterator} do
-  #     assert_raise ArgumentError, fn -> Iterator.set_end(iterator, :invalid) end
-  #   end
-
-  #   test "raises ArgumentError when not given a valid iterator" do
-  #     assert_raise ArgumentError, fn -> Iterator.set_end(:invalid, "20190909") end
-  #   end
-  # end
-
   describe "Iterator.next/1" do
     setup [:iterator]
 
@@ -89,13 +73,6 @@ defmodule Excal.Interface.Recurrence.IteratorTest do
       assert {2019, 9, 9} = Iterator.next(iterator)
     end
 
-    # @tag end: "20180911"
-    # test "respects the given end time", %{iterator: iterator} do
-    #   assert {2018, 9, 9} = Iterator.next(iterator)
-    #   assert {2018, 9, 10} = Iterator.next(iterator)
-    #   assert is_nil(Iterator.next(iterator))
-    # end
-
     test "raises ArgumentError when not given an iterator" do
       assert_raise ArgumentError, fn -> Iterator.next(:invalid) end
     end
@@ -110,10 +87,6 @@ defmodule Excal.Interface.Recurrence.IteratorTest do
     if start_time = Map.get(context, :start) do
       Iterator.set_start(iterator, start_time)
     end
-
-    # if end_time = Map.get(context, :end) do
-    #   Iterator.set_end(iterator, end_time)
-    # end
 
     [iterator: iterator]
   end

@@ -7,6 +7,5 @@ defmodule Excal.Interface.Recurrence.Iterator do
 
   def new(_rrule, _dtstart), do: raise("NIF new/2 not implemented")
   def set_start(_iterator, _start), do: raise("NIF set_start/2 not implemented")
-  # def set_end(_iterator, _end), do: raise("NIF set_end/2 not implemented")
   def next(_iterator), do: raise("NIF next/1 not implemented")
 end
