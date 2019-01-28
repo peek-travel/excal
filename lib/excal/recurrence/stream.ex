@@ -1,11 +1,24 @@
 defmodule Excal.Recurrence.Stream do
   @moduledoc """
   Generates Elixir streams from icalendar rrules.
+
+  TODO: more docs
   """
 
   alias Excal.Recurrence.Iterator
 
+  @type option :: {:from, Excal.date_or_datetime()} | {:until, Excal.date_or_datetime()}
+  @type options :: [option()]
+
+  @doc """
+  TODO: docs
+  """
+  @spec new(String.t(), Excal.date_or_datetime(), options()) ::
+          {:ok, Enumerable.t()} | {:error, Iterator.initialization_error()}
   def new(rrule, dtstart, opts \\ []) do
+    # The below call to make_stream will not return any errors until the stream is used,
+    # so we initialize an iterator first to ensure it can be, to return any possible errors.
+    # This iterator is not actually used though.
     with {:ok, _} <- make_iterator(rrule, dtstart, opts) do
       {:ok, make_stream(rrule, dtstart, opts)}
     end
