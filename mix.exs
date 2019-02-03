@@ -42,6 +42,7 @@ defmodule Excal.MixProject do
 
   defp package do
     [
+      files: ["lib", ".formatter.exs", "mix.exs", "README.md", "LICENSE.md", "CHANGELOG.md", "src", "Makefile"],
       maintainers: ["Chris Dosé <chris.dose@gmail.com>"],
       licenses: ["MIT"],
       links: %{
