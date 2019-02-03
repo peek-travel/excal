@@ -8,16 +8,21 @@ end
 defmodule Excal.MixProject do
   use Mix.Project
 
+  @version "0.2.0"
+  @source_url "https://github.com/peek-travel/excal"
+
   def project do
     [
       app: :excal,
       compilers: [:excal] ++ Mix.compilers(),
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
       deps: deps(),
+      docs: docs(),
+      source_url: @source_url,
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [coveralls: :test]
     ]
@@ -40,8 +45,22 @@ defmodule Excal.MixProject do
       maintainers: ["Chris Dosé <chris.dose@gmail.com>"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/peek-travel/excal"
+        "GitHub" => @source_url,
+        "Readme" => "#{@source_url}/blob/#{@version}/README.md",
+        "Changelog" => "#{@source_url}/blob/#{@version}/CHANGELOG.md"
       }
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Excal",
+      source_ref: @version,
+      source_url: @source_url,
+      extras: ["README.md", "LICENSE.md"],
+      groups_for_modules: [
+        Recurrence: [Excal.Recurrence.Iterator, Excal.Recurrence.Stream]
+      ]
     ]
   end
 

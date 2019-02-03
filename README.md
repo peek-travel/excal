@@ -36,7 +36,7 @@ The package can be installed by adding `excal` to your list of dependencies in `
 ```elixir
 def deps do
   [
-    {:excal, "~> 0.1.0"}
+    {:excal, "~> 0.2.0"}
   ]
 end
 ```
