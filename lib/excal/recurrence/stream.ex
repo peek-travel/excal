@@ -1,6 +1,6 @@
 defmodule Excal.Recurrence.Stream do
   @moduledoc """
-  Generates Elixir streams from icalendar rrules.
+  Generates Elixir streams from iCalendar recurrence rules (RRULE).
 
   TODO: more docs
   """

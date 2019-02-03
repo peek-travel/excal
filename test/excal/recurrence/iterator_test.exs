@@ -3,6 +3,8 @@ defmodule Excal.Recurrence.IteratorTest do
 
   alias Excal.Recurrence.Iterator
 
+  doctest Iterator
+
   describe "Iterator.new/3" do
     test "returns an iterator struct when valid inputs are given" do
       assert {:ok, %Iterator{}} = Iterator.new("FREQ=DAILY", ~D[2018-09-09])
