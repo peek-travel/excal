@@ -74,6 +74,8 @@ defmodule Excal.Recurrence.Iterator do
 
   This can also be used to reset an existing iterator to a new starting time.
 
+  NOTE: You cannot call `set_start/2` on an iterator whose RRULE contains a COUNT clause.
+
   ## Example
 
   Consider: an RRULE for Friday on every 3rd week starting January 1st 2016 might look like this:

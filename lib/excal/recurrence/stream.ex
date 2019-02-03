@@ -2,18 +2,55 @@ defmodule Excal.Recurrence.Stream do
   @moduledoc """
   Generates Elixir streams from iCalendar recurrence rules (RRULE).
 
-  TODO: more docs
+  This is the most idiomatic way of interacting with iCalendar recurrence rules in Elixir. The streams created here act
+  like any other Elixir stream would act.
   """
 
   alias Excal.Recurrence.Iterator
 
+  @typedoc """
+  Valid options for `new/3`.
+  """
   @type option :: {:from, Excal.date_or_datetime()} | {:until, Excal.date_or_datetime()}
-  @type options :: [option()]
 
   @doc """
-  TODO: docs
+  Creates a stream of date or datetime instances from the given recurrence rule string and schedule start time.
+
+  It's also possible to set the start and end time of the stream using the `:from` and `:until` options.
+
+  ## Options
+
+    * `:from` - specifies the start date or datetime of the stream.
+    * `:until` - specifies the end date or datetime of the stream.
+
+  ## Examples
+
+  An infinite stream of `Date` structs for every Monday, Wednesday and Friday:
+
+        iex> {:ok, stream} = Stream.new("FREQ=WEEKLY;BYDAY=MO,WE,FR", ~D[2019-01-01])
+        ...> Enum.take(stream, 5)
+        [
+          ~D[2019-01-02],
+          ~D[2019-01-04],
+          ~D[2019-01-07],
+          ~D[2019-01-09],
+          ~D[2019-01-11]
+        ]
+
+  A finite stream of `NaiveDateTime` using the `:from` and `:until` options:
+
+        iex> opts = [from: ~N[2020-01-01 10:00:00], until: ~N[2020-06-01 10:00:00]]
+        ...> {:ok, stream} = Stream.new("FREQ=MONTHLY;BYMONTHDAY=1", ~N[2019-01-01 10:00:00], opts)
+        ...> Enum.to_list(stream)
+        [
+          ~N[2020-01-01 10:00:00],
+          ~N[2020-02-01 10:00:00],
+          ~N[2020-03-01 10:00:00],
+          ~N[2020-04-01 10:00:00],
+          ~N[2020-05-01 10:00:00]
+        ]
   """
-  @spec new(String.t(), Excal.date_or_datetime(), options()) ::
+  @spec new(String.t(), Excal.date_or_datetime(), [option()]) ::
           {:ok, Enumerable.t()} | {:error, Iterator.initialization_error()}
   def new(rrule, dtstart, opts \\ []) do
     # The below call to make_stream will not return any errors until the stream is used,
