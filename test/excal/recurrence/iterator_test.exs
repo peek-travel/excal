@@ -3,6 +3,8 @@ defmodule Excal.Recurrence.IteratorTest do
 
   alias Excal.Recurrence.Iterator
 
+  doctest Iterator
+
   describe "Iterator.new/3" do
     test "returns an iterator struct when valid inputs are given" do
       assert {:ok, %Iterator{}} = Iterator.new("FREQ=DAILY", ~D[2018-09-09])
@@ -32,6 +34,10 @@ defmodule Excal.Recurrence.IteratorTest do
     test "returns an error when the start type doesn't match the iterator's dtstart type", %{iterator: iterator} do
       assert {:error, :datetime_type_mismatch} = Iterator.set_start(iterator, ~N[2018-09-09 12:30:00])
     end
+
+    test "raises if not given an iterator" do
+      assert_raise ArgumentError, fn -> Iterator.set_start(:foo, ~N[2018-09-09 12:30:00]) end
+    end
   end
 
   describe "Iterator.set_end/2" do
@@ -43,6 +49,10 @@ defmodule Excal.Recurrence.IteratorTest do
 
     test "returns an error when the end type doesn't match the iterator's dtstart type", %{iterator: iterator} do
       assert {:error, :datetime_type_mismatch} = Iterator.set_end(iterator, ~N[2018-09-09 12:30:00])
+    end
+
+    test "raises if not given an iterator" do
+      assert_raise ArgumentError, fn -> Iterator.set_end(:foo, ~N[2018-09-09 12:30:00]) end
     end
   end
 

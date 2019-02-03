@@ -1,35 +1,37 @@
 defmodule Excal.Recurrence.StreamTest do
   use ExUnit.Case, async: true
 
-  alias Excal.Recurrence.Stream, as: RecurrenceStream
+  alias Excal.Recurrence.Stream
+
+  doctest Stream
 
   describe "Stream.new/3" do
     test "returns a stream when valid inputs are given" do
-      assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~D[2018-09-09])
+      assert {:ok, stream} = Stream.new("FREQ=DAILY", ~D[2018-09-09])
       assert is_function(stream)
-      assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~N[2018-09-09 12:30:00])
+      assert {:ok, stream} = Stream.new("FREQ=DAILY", ~N[2018-09-09 12:30:00])
       assert is_function(stream)
     end
 
     test "raises ArgumentError when not given a string for rrule" do
-      assert_raise ArgumentError, fn -> RecurrenceStream.new(:invalid, ~D[2018-09-09]) end
+      assert_raise ArgumentError, fn -> Stream.new(:invalid, ~D[2018-09-09]) end
     end
 
     test "returns an error when an invalid rrule string is given" do
-      assert {:error, :invalid_rrule} = RecurrenceStream.new("INVALID", ~D[2018-09-09])
+      assert {:error, :invalid_rrule} = Stream.new("INVALID", ~D[2018-09-09])
     end
 
     test "returns an error when an invalid datetime type is given" do
-      assert {:error, :unsupported_datetime_type} = RecurrenceStream.new("FREQ=DAILY", :invalid)
+      assert {:error, :unsupported_datetime_type} = Stream.new("FREQ=DAILY", :invalid)
     end
 
     test "accepts an option for start time" do
-      assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~D[2018-09-09], from: ~D[2019-09-09])
+      assert {:ok, stream} = Stream.new("FREQ=DAILY", ~D[2018-09-09], from: ~D[2019-09-09])
       assert is_function(stream)
     end
 
     test "accepts an option for end time" do
-      assert {:ok, stream} = RecurrenceStream.new("FREQ=DAILY", ~D[2018-09-09], until: ~D[2019-09-09])
+      assert {:ok, stream} = Stream.new("FREQ=DAILY", ~D[2018-09-09], until: ~D[2019-09-09])
       assert is_function(stream)
     end
   end
@@ -111,7 +113,7 @@ defmodule Excal.Recurrence.StreamTest do
         {_, _}, opts -> opts
       end)
 
-    {:ok, stream} = RecurrenceStream.new(rrule, dtstart, opts)
+    {:ok, stream} = Stream.new(rrule, dtstart, opts)
 
     [stream: stream]
   end

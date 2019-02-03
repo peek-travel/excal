@@ -3,11 +3,31 @@
 
 NIF bindings to [libical](https://libical.github.io/libical/) for Elixir.
 
-This library is a **WIP**!
+This library is still a **WIP**, but works well for basic calls to libical's recurrence iterators.
 
 ## Requirements
 
-Excal requires that libical be present on your system, and that it's at least version 3.0.0.
+Excal requires that libical (and its development headers) be present on your system, and that it's at least version 3.0.0.
+
+### macOS
+
+You can easily install `libical` using [Homebrew](https://brew.sh/) on macOS:
+
+```
+brew install libical
+```
+
+Homebrew provides the latest version, as of this writing, which is `3.0.4`.
+
+### linux
+
+Use favorite package manager to install `libical` (may be named slightly differently depending on distro), or maybe `libical-dev` if you're using a Debian based distro like Ubuntu.
+
+NOTE: Make sure you're getting at least version `3.0.0`. Anything below will prevent Excal from compiling.
+
+### Windows
+
+I'm not currently aware of how to get this working on Windows, but if someone wants to try and let me know how, I will add instructions to this readme.
 
 ## Installation
 

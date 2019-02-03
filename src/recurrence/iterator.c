@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include "libical/ical.h"
 #include "erl_nif.h"
@@ -21,11 +20,6 @@ int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info)
   int flags = ERL_NIF_RT_CREATE | ERL_NIF_RT_TAKEOVER;
   EXCAL_RECUR_ITERATOR_RES_TYPE = enif_open_resource_type(env, NULL, "IteratorResource", recurrence_iterator_free, flags, NULL);
 
-  return 0;
-}
-
-int upgrade(ErlNifEnv *env, void **priv_data, void **old_priv_data, ERL_NIF_TERM load_info)
-{
   return 0;
 }
 
@@ -232,4 +226,4 @@ static ErlNifFunc nif_funcs[] = {
     {"set_start", 2, recurrence_iterator_set_start},
     {"next", 1, recurrence_iterator_next}};
 
-ERL_NIF_INIT(Elixir.Excal.Interface.Recurrence.Iterator, nif_funcs, &load, NULL, &upgrade, NULL)
+ERL_NIF_INIT(Elixir.Excal.Interface.Recurrence.Iterator, nif_funcs, &load, NULL, NULL, NULL)
