@@ -1,5 +1,3 @@
-$(shell mkdir -p priv/recurrence)
-
 CFLAGS = -O3 -Wall
 
 ERLANG_PATH = $(shell erl -eval 'io:format("~s", [lists:concat([code:root_dir(), "/erts-", erlang:system_info(version), "/include"])])' -s init stop -noshell)
@@ -13,8 +11,17 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
-all:
-	$(CC) $(CFLAGS) -shared -o priv/recurrence/iterator.so src/recurrence/iterator.c -lical $(LDFLAGS)
+SOURCE_FILES = src/recurrence/iterator.c
+LIBRARY_DIRECTORY = priv/recurrence
+LIBRARY = $(LIBRARY_DIRECTORY)/iterator.so
+
+all: $(SOURCE_FILES) $(LIBRARY)
+
+$(LIBRARY): $(LIBRARY_DIRECTORY)
+	$(CC) $(CFLAGS) -shared -o $(LIBRARY) $(SOURCE_FILES) -lical $(LDFLAGS)
+
+$(LIBRARY_DIRECTORY):
+	mkdir -p priv/recurrence
 
 clean:
 	rm  -r "priv/recurrence/iterator.so"
