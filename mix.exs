@@ -1,10 +1,3 @@
-defmodule Mix.Tasks.Compile.Excal do
-  def run(_args) do
-    {result, _errcode} = System.cmd("make", [])
-    IO.binwrite(result)
-  end
-end
-
 defmodule Excal.MixProject do
   use Mix.Project
 
@@ -14,7 +7,7 @@ defmodule Excal.MixProject do
   def project do
     [
       app: :excal,
-      compilers: [:excal] ++ Mix.compilers(),
+      compilers: [:elixir_make] ++ Mix.compilers(),
       version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
@@ -24,7 +17,8 @@ defmodule Excal.MixProject do
       docs: docs(),
       source_url: @source_url,
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test]
+      preferred_cli_env: [coveralls: :test],
+      make_clean: ["clean"]
     ]
   end
 
@@ -71,7 +65,8 @@ defmodule Excal.MixProject do
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.9", only: :test, runtime: false}
+      {:excoveralls, "~> 0.9", only: :test, runtime: false},
+      {:elixir_make, "~> 0.4", runtime: false}
     ]
   end
 end
