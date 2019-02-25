@@ -1,4 +1,4 @@
-FROM bitwalker/alpine-elixir:1.8.0
+FROM bitwalker/alpine-elixir:1.8.1
 
 ENV REFRESHED_AT 2019-01-26
 ENV LIBICAL_VERSION v3.0.4
