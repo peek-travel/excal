@@ -1,6 +1,10 @@
 # Excal
 
-[![Build Status](https://travis-ci.com/peek-travel/excal.svg?branch=master)](https://travis-ci.org/peek-travel/excal) [![codecov](https://codecov.io/gh/peek-travel/excal/branch/master/graph/badge.svg)](https://codecov.io/gh/peek-travel/excal) [![Hex.pm Version](https://img.shields.io/hexpm/v/excal.svg?style=flat)](https://hex.pm/packages/excal) [![License](https://img.shields.io/hexpm/l/excal.svg)](LICENSE.md)
+[![Build Status](https://travis-ci.com/peek-travel/excal.svg?branch=master)](https://travis-ci.org/peek-travel/excal)
+[![codecov](https://codecov.io/gh/peek-travel/excal/branch/master/graph/badge.svg)](https://codecov.io/gh/peek-travel/excal)
+[![Ebert](https://ebertapp.io/github/peek-travel/excal.svg)](https://ebertapp.io/github/peek-travel/excal)
+[![Hex.pm Version](https://img.shields.io/hexpm/v/excal.svg?style=flat)](https://hex.pm/packages/excal)
+[![License](https://img.shields.io/hexpm/l/excal.svg)](LICENSE.md)
 
 NIF bindings to [libical](https://libical.github.io/libical/) for Elixir.
 

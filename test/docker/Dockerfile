@@ -1,11 +1,11 @@
-FROM bitwalker/alpine-elixir:1.8.1
+FROM beardedeagle/alpine-elixir-builder:1.8.1
 
-ENV REFRESHED_AT 2019-01-26
+ENV REFRESHED_AT 2019-03-01
 ENV LIBICAL_VERSION v3.0.4
 
 # install builds dependencies for libical
 RUN apk --no-cache --update upgrade && \
-  apk --no-cache add make cmake icu-dev perl gcc g++ musl-dev libc-dev
+  apk --no-cache add git make cmake icu-dev perl gcc g++ musl-dev libc-dev
 
 # fetch and install libical from source/master
 RUN mkdir /opt/src && \
@@ -23,6 +23,7 @@ RUN mkdir /opt/src && \
   make && \
   make install
 
+WORKDIR /opt/app/
 COPY . /opt/app/
 
 ENV MIX_ENV test
