@@ -51,7 +51,7 @@ defmodule Excal.Recurrence.Stream do
         ]
   """
   @spec new(String.t(), Excal.date_or_datetime(), [option()]) ::
-          {:ok, Enumerable.t()} | {:error, Iterator.initialization_error()}
+          {:ok, Enumerable.t()} | {:error, Iterator.initialization_error() | Iterator.iterator_start_error()}
   def new(rrule, dtstart, opts \\ []) do
     # The below call to make_stream will not return any errors until the stream is used,
     # so we initialize an iterator first to ensure it can be, to return any possible errors.
