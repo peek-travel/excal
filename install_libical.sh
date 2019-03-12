@@ -13,7 +13,8 @@ cmake -DWITH_CXX_BINDINGS=false \
   -DICAL_BUILD_DOCS=false \
   -DICAL_GLIB=false \
   -DCMAKE_RELEASE_TYPE=Release \
-  -DCMAKE_INSTALL_LIBDIR=lib \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_INSTALL_LIBDIR=/usr/lib \
   -DSHARED_ONLY=true \
   ..
 
