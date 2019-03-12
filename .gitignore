@@ -24,3 +24,7 @@ excal-*.tar
 
 # ignore build shared objects
 /priv/**/*.so
+
+# ignore local plts
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
