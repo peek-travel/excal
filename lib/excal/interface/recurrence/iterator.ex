@@ -7,7 +7,7 @@ defmodule Excal.Interface.Recurrence.Iterator do
   @type iterator_start_error :: :invalid_start | :start_invalid_for_rule
 
   @doc false
-  def load_nifs, do: [:code.priv_dir(:excal), '/recurrence/iterator'] |> :erlang.load_nif(0)
+  def load_nifs, do: [:code.priv_dir(:excal), 'recurrence/iterator'] |> :filename.join() |> :erlang.load_nif(0)
 
   @spec new(String.t(), String.t()) ::
           {:ok, reference()} | {:error, initialization_error()}

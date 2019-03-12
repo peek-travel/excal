@@ -3,12 +3,17 @@ sudo: required
 services:
   - docker
 
+cache:
+  directories:
+    - .build_cache
+
 install:
   - docker build -f test/docker/Dockerfile -t excal:test .
 
 script:
   - docker run --rm excal:test mix format --check-formatted
-  - docker run --rm excal:test mix credo
+  - docker run --rm excal:test mix credo --strict
+  - docker run --rm -v $PWD/.build_cache:/opt/app/_build excal:test mix dialyzer
   - docker run --rm -v $PWD/cover:/opt/app/cover excal:test mix coveralls.json
 
 after_success:
