@@ -5,6 +5,8 @@
 [![Ebert](https://ebertapp.io/github/peek-travel/excal.svg)](https://ebertapp.io/github/peek-travel/excal)
 [![Hex.pm Version](https://img.shields.io/hexpm/v/excal.svg?style=flat)](https://hex.pm/packages/excal)
 [![License](https://img.shields.io/hexpm/l/excal.svg)](LICENSE.md)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=peek-travel/excal)](https://dependabot.com)
+[![Inline docs](http://inch-ci.org/github/peek-travel/excal.svg)](http://inch-ci.org/github/peek-travel/excal)
 
 NIF bindings to [libical](https://libical.github.io/libical/) for Elixir.
 

@@ -28,4 +28,5 @@ script:
   - mix coveralls.json
 
 after_success:
+  - mix inch.report
   - bash <(curl -s https://codecov.io/bash)
