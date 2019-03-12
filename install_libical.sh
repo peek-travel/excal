@@ -18,4 +18,4 @@ cmake -DWITH_CXX_BINDINGS=false \
   ..
 
 make
-make install
+sudo make install
