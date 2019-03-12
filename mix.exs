@@ -82,7 +82,8 @@ defmodule Excal.MixProject do
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:elixir_make, "~> 0.4", runtime: false},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.9", only: :test, runtime: false}
+      {:excoveralls, "~> 0.9", only: :test, runtime: false},
+      {:inch_ex, "~> 2.0", only: [:dev, :test]}
     ]
   end
 end
