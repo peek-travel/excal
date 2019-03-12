@@ -12,8 +12,7 @@ elixir:
 
 cache:
   directories:
-    - _build
-    - deps
+    - priv/plts
 
 install:
   - mix local.hex --force

@@ -17,8 +17,24 @@ defmodule Excal.MixProject do
       docs: docs(),
       source_url: @source_url,
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test],
-      make_clean: ["clean"]
+      preferred_cli_env: preferred_cli_env(),
+      make_clean: ["clean"],
+      dialyzer: dialyzer()
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_deps: :app_tree,
+      plt_file: {:no_warn, "priv/plts/excal.plt"}
+    ]
+  end
+
+  defp preferred_cli_env do
+    [
+      coveralls: :test,
+      "coveralls.html": :test,
+      "coveralls.json": :test
     ]
   end
 
