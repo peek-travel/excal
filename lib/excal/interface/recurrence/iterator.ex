@@ -9,8 +9,7 @@ defmodule Excal.Interface.Recurrence.Iterator do
   @doc false
   def load_nifs, do: [:code.priv_dir(:excal), 'recurrence/iterator'] |> :filename.join() |> :erlang.load_nif(0)
 
-  @spec new(String.t(), String.t()) ::
-          {:ok, reference()} | {:error, initialization_error()}
+  @spec new(String.t(), String.t()) :: {:ok, reference()} | {:error, initialization_error()}
   def new(_rrule, _dtstart), do: :erlang.nif_error("NIF new/2 not implemented")
 
   @spec set_start(reference(), String.t()) :: :ok | {:error, iterator_start_error()}
