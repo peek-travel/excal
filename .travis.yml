@@ -16,6 +16,9 @@ cache:
     - deps
 
 install:
+  - mix local.hex --force
+  - mix local.rebar --force
+  - mix deps.get
   - ./install_libical.sh
 
 script:
