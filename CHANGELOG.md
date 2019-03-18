@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased][]
 
+## [0.3.1][] - 2019-03-18
+
+Thanks [@bismark](https://github.com/bismark) (PR [#29](https://github.com/peek-travel/excal/pull/29))
+
+### Fixed
+
+- Fixed typespec for Stream.new - Thanks [@bismark](https://github.com/bismark) - [#29](https://github.com/peek-travel/excal/pull/29)
+- Fixed Makefile not recompiling when C source changes - [0a5081bb](https://github.com/peek-travel/excal/commit/0a5081bb865b712cc1e573cce423b320719aa9c3)
+- Fixed dialyzer error on `Excal.Interface.Recurrence.Iterator.load_nifs/0` - [#30](https://github.com/peek-travel/excal/pull/30)
+
 ## [0.3.0][] - 2019-02-12
 
 Thanks [@bismark](https://github.com/bismark) for the following fixes in
@@ -35,6 +45,7 @@ PR [#23](https://github.com/peek-travel/excal/pull/23)
 
 ### Initial release
 
-[Unreleased]: https://github.com/peek-travel/excal/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/peek-travel/excal/compare/0.3.1...HEAD
+[0.3.1]: https://github.com/peek-travel/excal/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/peek-travel/excal/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/peek-travel/excal/compare/0.1.0...0.2.0
