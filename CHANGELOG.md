@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.1][] - 2019-03-18
 
-Thanks [@bismark](https://github.com/bismark) (PR [#29](https://github.com/peek-travel/excal/pull/29))
-
 ### Fixed
 
 - Fixed typespec for Stream.new - Thanks [@bismark](https://github.com/bismark) - [#29](https://github.com/peek-travel/excal/pull/29)
