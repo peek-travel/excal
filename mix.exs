@@ -77,7 +77,7 @@ defmodule Excal.MixProject do
 
   defp deps do
     [
-      {:benchee, "~> 0.13", only: :dev, runtime: false},
+      {:benchee, "~> 1.0", only: :dev, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:elixir_make, "~> 0.4", runtime: false},
