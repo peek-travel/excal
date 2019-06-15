@@ -9,6 +9,10 @@ defmodule Excal.Recurrence.IteratorTest do
     test "returns an iterator struct when valid inputs are given" do
       assert {:ok, %Iterator{}} = Iterator.new("FREQ=DAILY", ~D[2018-09-09])
       assert {:ok, %Iterator{}} = Iterator.new("FREQ=DAILY", ~N[2018-09-09 12:30:00])
+      assert {:ok, %Iterator{}} = Iterator.new("FREQ=DAILY", DateTime.from_naive!(~N[2018-09-09 12:30:00], "Etc/UTC"))
+
+      assert {:ok, %Iterator{}} =
+               Iterator.new("FREQ=DAILY", DateTime.from_naive!(~N[2018-09-09 12:30:00], "America/Los_Angeles"))
     end
 
     test "raises ArgumentError when not given a string for rrule" do
@@ -33,6 +37,20 @@ defmodule Excal.Recurrence.IteratorTest do
 
     test "returns an error when the start type doesn't match the iterator's dtstart type", %{iterator: iterator} do
       assert {:error, :datetime_type_mismatch} = Iterator.set_start(iterator, ~N[2018-09-09 12:30:00])
+
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_start(iterator, DateTime.from_naive!(~N[2018-09-09 12:30:00], "Etc/UTC"))
+
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_start(iterator, DateTime.from_naive!(~N[2018-09-09 12:30:00], "America/Los_Angeles"))
+    end
+
+    @tag dtstart: DateTime.from_naive!(~N[2018-09-09 12:30:00], "America/Los_Angeles")
+    test "returns an error when the start time zone doesn't match the iterator's dtstart time zone", %{
+      iterator: iterator
+    } do
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_start(iterator, DateTime.from_naive!(~N[2019-09-09 12:30:00], "America/New_York"))
     end
 
     test "raises if not given an iterator" do
@@ -49,6 +67,20 @@ defmodule Excal.Recurrence.IteratorTest do
 
     test "returns an error when the end type doesn't match the iterator's dtstart type", %{iterator: iterator} do
       assert {:error, :datetime_type_mismatch} = Iterator.set_end(iterator, ~N[2018-09-09 12:30:00])
+
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_end(iterator, DateTime.from_naive!(~N[2018-09-09 12:30:00], "Etc/UTC"))
+
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_end(iterator, DateTime.from_naive!(~N[2018-09-09 12:30:00], "America/Los_Angeles"))
+    end
+
+    @tag dtstart: DateTime.from_naive!(~N[2018-09-09 12:30:00], "America/Los_Angeles")
+    test "returns an error when the end time zone doesn't match the iterator's dtstart time zone", %{
+      iterator: iterator
+    } do
+      assert {:error, :datetime_type_mismatch} =
+               Iterator.set_end(iterator, DateTime.from_naive!(~N[2019-09-09 12:30:00], "America/New_York"))
     end
 
     test "raises if not given an iterator" do

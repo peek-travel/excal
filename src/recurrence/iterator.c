@@ -102,6 +102,8 @@ int get_string_from_binary(ErlNifEnv *env, ERL_NIF_TERM arg, char **output)
 static ERL_NIF_TERM
 recurrence_iterator_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
+  icalerror_set_errno(ICAL_NO_ERROR); // reset error first
+
   char *rrule_string;
   if (argc < 1 || !get_string_from_binary(env, argv[0], &rrule_string))
   {
@@ -146,6 +148,87 @@ recurrence_iterator_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   ERL_NIF_TERM iterator_term = enif_make_resource(env, iterator_resource);
   enif_release_resource(iterator_resource);
 
+  // uncaught error
+  if (icalerrno != ICAL_NO_ERROR)
+  {
+    return enif_make_badarg(env);
+  }
+
+  // return {:ok, iterator}
+  return make_ok_tuple(env, iterator_term);
+}
+
+static ERL_NIF_TERM
+recurrence_iterator_new_zoned(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+{
+  icalerror_set_errno(ICAL_NO_ERROR); // reset error first
+
+  char *rrule_string;
+  if (argc < 1 || !get_string_from_binary(env, argv[0], &rrule_string))
+  {
+    return enif_make_badarg(env);
+  }
+
+  char *dtstart_string;
+  if (argc < 2 || !get_string_from_binary(env, argv[1], &dtstart_string))
+  {
+    return enif_make_badarg(env);
+  }
+
+  char *time_zone_string;
+  if (argc < 3 || !get_string_from_binary(env, argv[2], &time_zone_string))
+  {
+    return enif_make_badarg(env);
+  }
+
+  // make the start time struct from the dtstart string
+  struct icaltimetype dtstart = icaltime_from_string(dtstart_string);
+  if (icaltime_is_null_time(dtstart))
+  {
+    return make_error_tuple(env, "invalid_dtstart");
+  }
+
+  // get time zone from db
+  icaltimezone *zone = icaltimezone_get_builtin_timezone(time_zone_string);
+  if (zone == NULL)
+  {
+    // TODO: better error
+    return make_error_tuple(env, "invalid_dtstart");
+  }
+
+  // set time zone on dtstart
+  dtstart = icaltime_set_timezone(&dtstart, zone);
+
+  // make the recurrence struct from the rrule string
+  icalerror_set_errno(ICAL_NO_ERROR); // reset error first
+  struct icalrecurrencetype recur = icalrecurrencetype_from_string(rrule_string);
+  if (icalerrno == ICAL_MALFORMEDDATA_ERROR || icalerrno == ICAL_NEWFAILED_ERROR)
+  {
+    return make_error_tuple(env, "invalid_rrule");
+  }
+
+  // initialize the iterator
+  icalrecur_iterator *iterator = icalrecur_iterator_new(recur, dtstart);
+  if (iterator == 0)
+  {
+    // not sure if this is even possible
+    return make_error_tuple(env, "bad_iterator");
+  }
+
+  // wrap the iterator in a resource struct
+  IteratorResource *iterator_resource = enif_alloc_resource(EXCAL_RECUR_ITERATOR_RES_TYPE, sizeof(IteratorResource));
+  iterator_resource->iterator = iterator;
+
+  // convert to erlang resource term and release to erlang memory management
+  ERL_NIF_TERM iterator_term = enif_make_resource(env, iterator_resource);
+  enif_release_resource(iterator_resource);
+
+  // uncaught error
+  if (icalerrno != ICAL_NO_ERROR)
+  {
+    return enif_make_badarg(env);
+  }
+
   // return {:ok, iterator}
   return make_ok_tuple(env, iterator_term);
 }
@@ -153,6 +236,8 @@ recurrence_iterator_new(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 static ERL_NIF_TERM
 recurrence_iterator_set_start(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
+  icalerror_set_errno(ICAL_NO_ERROR); // reset error first
+
   // get iterator arg
   icalrecur_iterator *iterator;
   if (argc < 1 || !get_iterator(env, argv[0], &iterator))
@@ -178,6 +263,12 @@ recurrence_iterator_set_start(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
   // set iterator start
   if (icalrecur_iterator_set_start(iterator, start))
   {
+    // uncaught error
+    if (icalerrno != ICAL_NO_ERROR)
+    {
+      return enif_make_badarg(env);
+    }
+
     // return :ok
     return enif_make_atom(env, "ok");
   }
@@ -192,6 +283,8 @@ recurrence_iterator_set_start(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
 static ERL_NIF_TERM
 recurrence_iterator_next(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
+  icalerror_set_errno(ICAL_NO_ERROR); // reset error first
+
   // get iterator arg
   icalrecur_iterator *iterator;
   if (argc < 1 || !get_iterator(env, argv[0], &iterator))
@@ -217,13 +310,21 @@ recurrence_iterator_next(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     occurrence_term = icaltime_to_erl_datetime(env, occurrence);
   }
 
+  // uncaught error
+  if (icalerrno != ICAL_NO_ERROR)
+  {
+    return enif_make_badarg(env);
+  }
+
   // return occurrence
   return occurrence_term;
 }
 
 static ErlNifFunc nif_funcs[] = {
     {"new", 2, recurrence_iterator_new},
+    {"new_zoned", 3, recurrence_iterator_new_zoned},
     {"set_start", 2, recurrence_iterator_set_start},
     {"next", 1, recurrence_iterator_next}};
 
-ERL_NIF_INIT(Elixir.Excal.Interface.Recurrence.Iterator, nif_funcs, &load, NULL, NULL, NULL)
+ERL_NIF_INIT(Elixir.Excal.Interface.Recurrence.Iterator, nif_funcs,
+             &load, NULL, NULL, NULL)

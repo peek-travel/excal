@@ -10,7 +10,7 @@ defmodule Excal.Recurrence.Iterator do
   alias Excal.Interface.Recurrence.Iterator, as: Interface
 
   @enforce_keys [:iterator, :type, :rrule, :dtstart]
-  defstruct iterator: nil, type: nil, rrule: nil, dtstart: nil, from: nil, until: nil, finished: false
+  defstruct iterator: nil, type: nil, rrule: nil, dtstart: nil, tzid: nil, from: nil, until: nil, finished: false
 
   @typedoc """
   A struct that represents a recurrence iterator. Consider all the fields to be internal implementation detail at this
@@ -18,9 +18,10 @@ defmodule Excal.Recurrence.Iterator do
   """
   @type t :: %Iterator{
           iterator: reference(),
-          type: Date | NaiveDateTime,
+          type: Date | NaiveDateTime | DateTime,
           rrule: String.t(),
           dtstart: Excal.date_or_datetime(),
+          tzid: String.t() | nil,
           from: nil | Excal.date_or_datetime(),
           until: nil | Excal.date_or_datetime(),
           finished: boolean()
@@ -59,11 +60,17 @@ defmodule Excal.Recurrence.Iterator do
   """
   @spec new(String.t(), Excal.date_or_datetime()) :: {:ok, t()} | {:error, initialization_error()}
   def new(rrule, date_or_datetime) do
-    with {:ok, type, dtstart} <- to_ical_time_string(date_or_datetime),
-         {:ok, iterator} <- Interface.new(rrule, dtstart) do
-      {:ok, %Iterator{iterator: iterator, type: type, rrule: rrule, dtstart: date_or_datetime}}
+    with {:ok, type, dtstart, tzid} <- to_ical_time_string(date_or_datetime),
+         {:ok, iterator} <- iterator_reference(rrule, dtstart, tzid) do
+      {:ok, %Iterator{iterator: iterator, type: type, rrule: rrule, dtstart: date_or_datetime, tzid: tzid}}
     end
   end
+
+  defp iterator_reference(rrule, dtstart, nil), do: Interface.new(rrule, dtstart)
+
+  defp iterator_reference(rrule, dtstart, "Etc/UTC"), do: Interface.new(rrule, dtstart)
+
+  defp iterator_reference(rrule, dtstart, tzid), do: Interface.new_zoned(rrule, dtstart, tzid)
 
   @doc """
   Sets the start date or datetime for an existing iterator.
@@ -97,7 +104,8 @@ defmodule Excal.Recurrence.Iterator do
   """
   @spec set_start(t(), Excal.date_or_datetime()) :: {:ok, t()} | {:error, iterator_start_error()}
   def set_start(%Iterator{iterator: iterator_ref, type: type} = iterator, %type{} = date_or_datetime) do
-    with {:ok, _, time_string} <- to_ical_time_string(date_or_datetime),
+    with :ok <- time_zones_match(iterator, date_or_datetime),
+         {:ok, _, time_string, _} <- to_ical_time_string(date_or_datetime),
          :ok <- Interface.set_start(iterator_ref, time_string) do
       {:ok, %{iterator | from: date_or_datetime}}
     end
@@ -105,6 +113,11 @@ defmodule Excal.Recurrence.Iterator do
 
   def set_start(%Iterator{}, _), do: {:error, :datetime_type_mismatch}
   def set_start(iterator, _), do: raise(ArgumentError, "invalid iterator: #{inspect(iterator)}")
+
+  defp time_zones_match(%Iterator{tzid: nil}, %Date{}), do: :ok
+  defp time_zones_match(%Iterator{tzid: nil}, %NaiveDateTime{}), do: :ok
+  defp time_zones_match(%Iterator{tzid: tzid}, %DateTime{time_zone: tzid}), do: :ok
+  defp time_zones_match(_, _), do: {:error, :datetime_type_mismatch}
 
   @doc """
   Sets the end date or datetime for an existing iterator.
@@ -124,7 +137,9 @@ defmodule Excal.Recurrence.Iterator do
   """
   @spec set_end(t(), Excal.date_or_datetime()) :: {:ok, t()} | {:error, :datetime_type_mismatch}
   def set_end(%Iterator{type: type} = iterator, %type{} = date_or_datetime) do
-    {:ok, %{iterator | until: date_or_datetime}}
+    with :ok <- time_zones_match(iterator, date_or_datetime) do
+      {:ok, %{iterator | until: date_or_datetime}}
+    end
   end
 
   def set_end(%Iterator{}, _), do: {:error, :datetime_type_mismatch}
@@ -146,8 +161,8 @@ defmodule Excal.Recurrence.Iterator do
   @spec next(t()) :: {Excal.date_or_datetime(), t()} | {nil, t()}
   def next(%Iterator{finished: true} = iterator), do: {nil, iterator}
 
-  def next(%Iterator{iterator: iterator_ref, type: type, until: until} = iterator) do
-    occurrence = iterator_ref |> Interface.next() |> from_tuple(type)
+  def next(%Iterator{iterator: iterator_ref, type: type, until: until, tzid: tzid} = iterator) do
+    occurrence = iterator_ref |> Interface.next() |> from_tuple(type, tzid)
 
     cond do
       is_nil(occurrence) ->
@@ -164,10 +179,17 @@ defmodule Excal.Recurrence.Iterator do
     end
   end
 
-  defp to_ical_time_string(%Date{} = date), do: {:ok, Date, Date.to_iso8601(date, :basic)}
+  defp to_ical_time_string(%Date{} = date), do: {:ok, Date, Date.to_iso8601(date, :basic), nil}
 
   defp to_ical_time_string(%NaiveDateTime{} = datetime),
-    do: {:ok, NaiveDateTime, NaiveDateTime.to_iso8601(datetime, :basic)}
+    do: {:ok, NaiveDateTime, NaiveDateTime.to_iso8601(datetime, :basic), nil}
+
+  defp to_ical_time_string(%DateTime{time_zone: "Etc/UTC"} = datetime),
+    do: {:ok, DateTime, DateTime.to_iso8601(datetime, :basic), datetime.time_zone}
+
+  # NOTE: Intentionally using `NaiveDateTime.to_iso8601/2` on a DateTime to disregard its time zone.
+  defp to_ical_time_string(%DateTime{} = datetime),
+    do: {:ok, DateTime, NaiveDateTime.to_iso8601(datetime, :basic), datetime.time_zone}
 
   defp to_ical_time_string(_), do: {:error, :unsupported_datetime_type}
 
@@ -175,12 +197,12 @@ defmodule Excal.Recurrence.Iterator do
   # Native Elixir Date and NaiveDateTime are heavy to initialize with `new` or `from_erl!` because it checks validity.
   # We're bypassing the validity check here, assuming that libical is giving us valid dates and times.
 
-  defp from_tuple(nil, _), do: nil
+  defp from_tuple(nil, _, _), do: nil
 
-  defp from_tuple({year, month, day}, Date),
+  defp from_tuple({year, month, day}, Date, nil),
     do: %Date{year: year, month: month, day: day, calendar: Calendar.ISO}
 
-  defp from_tuple({{year, month, day}, {hour, minute, second}}, NaiveDateTime),
+  defp from_tuple({{year, month, day}, {hour, minute, second}}, NaiveDateTime, nil),
     do: %NaiveDateTime{
       year: year,
       month: month,
@@ -190,4 +212,14 @@ defmodule Excal.Recurrence.Iterator do
       second: second,
       calendar: Calendar.ISO
     }
+
+  defp from_tuple(erl_datetime, DateTime, tzid) do
+    naive = from_tuple(erl_datetime, NaiveDateTime, nil)
+
+    case DateTime.from_naive(naive, tzid) do
+      {:ok, datetime} -> datetime
+      {:gap, _, _} -> naive |> NaiveDateTime.add(3600, :second) |> DateTime.from_naive!(tzid)
+      {:ambiguous, datetime, _} -> datetime
+    end
+  end
 end

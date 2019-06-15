@@ -83,7 +83,8 @@ defmodule Excal.MixProject do
       {:elixir_make, "~> 0.4", runtime: false},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false},
       {:excoveralls, "~> 0.9", only: :test, runtime: false},
-      {:inch_ex, "~> 2.0", only: [:dev, :test]}
+      {:inch_ex, "~> 2.0", only: [:dev, :test]},
+      {:tzdata, "~> 1.0.0-rc.0", only: [:dev, :test]}
     ]
   end
 end

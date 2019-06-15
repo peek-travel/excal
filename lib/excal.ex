@@ -13,7 +13,7 @@ defmodule Excal do
   """
 
   @typedoc """
-  Recurrence iterators and streams can operate using either Date or NaiveDateTime structs.
+  Recurrence iterators and streams can operate using Date, NaiveDateTime or DateTime structs.
   """
-  @type date_or_datetime :: Date.t() | NaiveDateTime.t()
+  @type date_or_datetime :: Date.t() | NaiveDateTime.t() | DateTime.t()
 end

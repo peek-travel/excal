@@ -12,6 +12,9 @@ defmodule Excal.Interface.Recurrence.Iterator do
   @spec new(String.t(), String.t()) :: {:ok, reference()} | {:error, initialization_error()}
   def new(_rrule, _dtstart), do: :erlang.nif_error("NIF new/2 not implemented")
 
+  @spec new_zoned(String.t(), String.t(), String.t()) :: {:ok, reference()} | {:error, initialization_error()}
+  def new_zoned(_rrule, _dtstart, _tzid), do: :erlang.nif_error("NIF new_zoned/3 not implemented")
+
   @spec set_start(reference(), String.t()) :: :ok | {:error, iterator_start_error()}
   def set_start(_iterator, _start), do: :erlang.nif_error("NIF set_start/2 not implemented")
 

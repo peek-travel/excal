@@ -9,6 +9,8 @@ defmodule Excal.Interface.Recurrence.IteratorTest do
       assert is_reference(iterator)
       assert {:ok, iterator} = Iterator.new("FREQ=DAILY", "20180909T123000")
       assert is_reference(iterator)
+      assert {:ok, iterator} = Iterator.new("FREQ=DAILY", "20180909T123000Z")
+      assert is_reference(iterator)
     end
 
     test "raises ArgumentError when not given a string for rrule" do
@@ -58,6 +60,11 @@ defmodule Excal.Interface.Recurrence.IteratorTest do
 
     @tag dtstart: "20180909T123000"
     test "returns datetimes when iterator was initialized with datetime dtstart", %{iterator: iterator} do
+      assert {{2018, 9, 9}, {12, 30, 0}} = Iterator.next(iterator)
+    end
+
+    @tag dtstart: "20180909T123000Z"
+    test "returns datetimes when iterator was initialized with a UTC datetime dtstart", %{iterator: iterator} do
       assert {{2018, 9, 9}, {12, 30, 0}} = Iterator.next(iterator)
     end
 
