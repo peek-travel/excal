@@ -2,7 +2,7 @@
 
 # This script is intended only to be used in CI environments, don't use it to install libical on your system!
 
-LIBICAL_VERSION="v3.0.4"
+LIBICAL_VERSION="v3.0.7"
 
 git clone --branch $LIBICAL_VERSION https://github.com/libical/libical.git
 mkdir libical/build
