@@ -55,7 +55,7 @@ defmodule Excal.Recurrence.Iterator do
         iex> {:ok, iter} = Iterator.new("FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR", ~D[2019-01-01])
         ...> {occurrence, _iter} = Iterator.next(iter)
         ...> occurrence
-        ~D[2019-01-07]
+        ~D[2019-01-02]
   """
   @spec new(String.t(), Excal.date_or_datetime()) :: {:ok, t()} | {:error, initialization_error()}
   def new(rrule, date_or_datetime) do
@@ -141,7 +141,7 @@ defmodule Excal.Recurrence.Iterator do
         iex> {:ok, iter} = Iterator.new("FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR", ~D[2019-01-01])
         ...> {occurrence, _iter} = Iterator.next(iter)
         ...> occurrence
-        ~D[2019-01-07]
+        ~D[2019-01-02]
   """
   @spec next(t()) :: {Excal.date_or_datetime(), t()} | {nil, t()}
   def next(%Iterator{finished: true} = iterator), do: {nil, iterator}
