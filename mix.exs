@@ -9,7 +9,7 @@ defmodule Excal.MixProject do
       app: :excal,
       compilers: [:elixir_make] ++ Mix.compilers(),
       version: @version,
-      elixir: "~> 1.7",
+      elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -78,12 +78,11 @@ defmodule Excal.MixProject do
   defp deps do
     [
       {:benchee, "~> 1.0", only: :dev, runtime: false},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false},
-      {:elixir_make, "~> 0.4", runtime: false},
-      {:ex_doc, "~> 0.18", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.9", only: :test, runtime: false},
-      {:inch_ex, "~> 2.0", only: [:dev, :test]}
+      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
+      {:elixir_make, "~> 0.6", runtime: false},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.12", only: :test, runtime: false}
     ]
   end
 end

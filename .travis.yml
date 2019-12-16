@@ -3,12 +3,12 @@ sudo: required
 language: elixir
 
 otp_release:
-  - 20.3
-  - 21.2
+  - 21.3
+  - 22.2
 
 elixir:
-  - "1.7"
   - "1.8"
+  - "1.9"
 
 cache:
   directories:
